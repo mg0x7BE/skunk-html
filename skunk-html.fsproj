@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Fsharp.Formatting" Version="21.0.0-beta-004" />
+      <PackageReference Include="Fsharp.Formatting" Version="21.0.0-beta-005" />
     </ItemGroup>
 
 </Project>
