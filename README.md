@@ -1,24 +1,24 @@
 
-![GitHub repo size](https://img.shields.io/github/repo-size/MaxGripe/skunk-html)
-![GitHub License](https://img.shields.io/github/license/MaxGripe/skunk-html)
-![GitHub Created At](https://img.shields.io/github/created-at/MaxGripe/skunk-html)
-![GitHub forks](https://img.shields.io/github/forks/MaxGripe/skunk-html)
-![GitHub Repo stars](https://img.shields.io/github/stars/MaxGripe/skunk-html)
+![GitHub repo size](https://img.shields.io/github/repo-size/mg0x7BE/skunk-html)
+![GitHub License](https://img.shields.io/github/license/mg0x7BE/skunk-html)
+![GitHub Created At](https://img.shields.io/github/created-at/mg0x7BE/skunk-html)
+![GitHub forks](https://img.shields.io/github/forks/mg0x7BE/skunk-html)
+![GitHub Repo stars](https://img.shields.io/github/stars/mg0x7BE/skunk-html)
 
 # SkunkHTML
 
 Automatically generate a website on GitHub Pages using Markdown files as the source!
 
-![SkunkHTML](https://max.gripe/skunk-html/images/skunk-final.png)
+![SkunkHTML](https://mg0x7BE.github.io/skunk-html/images/skunk-final.png)
 
 Markdown in, GitHub Pages out!
 
 ## SkunkHTML setup
 Your own Markdown blog on GitHub in under 60 seconds:
 
-1. Fork [SkunkHTML](https://github.com/MaxGripe/skunk-html) repository on GitHub.
+1. Fork [SkunkHTML](https://github.com/mg0x7BE/skunk-html) repository on GitHub.
 2. Enable GitHub Pages in the repository settings (choose GitHub Actions as the source).
-3. Done! Your blog is online! Example: https://max.gripe/skunk-html/
+3. Done! Your blog is online! Example: https://mg0x7BE.github.io/skunk-html/
 
 Upload Markdown (.md) files to publish new posts.
 
@@ -57,11 +57,11 @@ When a Markdown (.md) file is created and placed in the `/markdown-blog/` folder
 
 ## Examples
 
-Detailed examples can be found at: https://max.gripe/skunk-html
+Detailed examples can be found at: https://mg0x7BE.github.io/skunk-html
 
 ## Contributing
 
-Feel free to post in the [discussions](https://github.com/MaxGripe/skunk-html/discussions) section for suggestions, open an [issue](https://github.com/MaxGripe/skunk-html/issues) to report problems, or submit a pull request if you'd like to contribute improvements to the site. Your input is always welcome!
+Feel free to post in the [discussions](https://github.com/mg0x7BE/skunk-html/discussions) section for suggestions, open an [issue](https://github.com/mg0x7BE/skunk-html/issues) to report problems, or submit a pull request if you'd like to contribute improvements to the site. Your input is always welcome!
 
 ## License
 
@@ -80,7 +80,7 @@ Although GitHub builds and hosts this site excellently, if you really want to, y
 1. [Download](https://dotnet.microsoft.com/en-us/download) and install .NET on Linux / macOS / Windows 
 2. Run the following commands
 ```
-git clone https://github.com/MaxGripe/skunk-html.git
+git clone https://github.com/mg0x7BE/skunk-html.git
 cd skunk-html
 dotnet restore
 dotnet run
