@@ -7,24 +7,24 @@
 
 # SkunkHTML
 
-Automatically generate a website on GitHub Pages using Markdown files as the source!
+Automatically generate a website on GitHub Pages using Markdown files.
 
 ![SkunkHTML](https://mg0x7BE.github.io/skunk-html/images/skunk-final.png)
 
 Markdown in, GitHub Pages out!
 
 ## SkunkHTML setup
-Your own Markdown blog on GitHub in under 60 seconds:
+Your own Markdown blog on GitHub.
 
 1. Fork [SkunkHTML](https://github.com/mg0x7BE/skunk-html) repository on GitHub.
 2. Enable GitHub Pages in the repository settings (choose GitHub Actions as the source).
-3. Done! Your blog is online! Example: https://mg0x7BE.github.io/skunk-html/
+3. Done. Your blog is online. Example: https://mg0x7BE.github.io/skunk-html/
 
 Upload Markdown (.md) files to publish new posts.
 
 ## How it works
 
-When a Markdown (.md) file is created and placed in the `/markdown-blog/` folder, the rest happens automagically. GitHub Actions detects changes pushed to the repository, triggers the build process, and deploys the updated site.
+When a Markdown (.md) file is created and placed in the `/markdown-blog/` folder, the rest happens automatically. GitHub Actions detects changes pushed to the repository, triggers the build process, and deploys the updated site.
 
 ## Some technical details
 
@@ -61,13 +61,13 @@ Detailed examples can be found at: https://mg0x7BE.github.io/skunk-html
 
 ## Contributing
 
-Feel free to post in the [discussions](https://github.com/mg0x7BE/skunk-html/discussions) section for suggestions, open an [issue](https://github.com/mg0x7BE/skunk-html/issues) to report problems, or submit a pull request if you'd like to contribute improvements to the site. Your input is always welcome!
+Suggestions, bug reports, and pull requests welcome. Use discussions, issues, or PRs.
 
 ## License
 
 This project is licensed under the terms of the [Unlicense](https://en.wikipedia.org/wiki/Unlicense).
 
-It also uses some external stuff, each with its own license:
+## Dependencies
 
 - [MVP.css](https://github.com/andybrewer/mvp) for styling
 - [microlight.js](https://github.com/asvd/microlight) for syntax highlighting
@@ -75,7 +75,7 @@ It also uses some external stuff, each with its own license:
 
 ## Optional self-hosting and custom build
 
-Although GitHub builds and hosts this site excellently, if you really want to, you can build your blog locally, for example to host it yourself. To do this:
+To build locally:
 
 1. [Download](https://dotnet.microsoft.com/en-us/download) and install .NET on Linux / macOS / Windows 
 2. Run the following commands
