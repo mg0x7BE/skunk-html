@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <RootNamespace>skunk_html</RootNamespace>
     </PropertyGroup>
 
@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Fsharp.Formatting" Version="21.0.0-beta-005" />
+      <PackageReference Include="Fsharp.Formatting" Version="21.0.0" />
     </ItemGroup>
 
 </Project>
