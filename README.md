@@ -20,27 +20,27 @@ Write Markdown, push to GitHub, your site updates automatically.
 ## Get started in 60 seconds
 
 1. **Fork** this repository
-2. Go to **Settings → Pages → Source: GitHub Actions**
+2. Go to **Settings > Pages > Source: GitHub Actions**
 3. Your blog is live at `https://YOUR-USERNAME.github.io/skunk-html/`
 
-To publish a post: add a Markdown file to the `markdown-blog/` folder. The file name **is the date** — name it like `2025-03-24.md` and start the file with a `# Title` heading. The title comes from the heading, the date comes from the file name. Push. Done.
+To publish a post: add a Markdown file to the `markdown-blog/` folder. The file name **is the date** - name it like `2025-03-24.md` and start the file with a `# Title` heading. The title comes from the heading, the date comes from the file name. Push. Done.
 
 ## Features
 
-- **Zero local setup** — everything runs on GitHub Actions
-- **Markdown → HTML** — write in Markdown, get a clean website
-- **RSS feed** — your readers can subscribe (`/feed.xml`)
-- **Sitemap** — search engines find your content (`/sitemap.xml`)
-- **SEO meta tags** — Open Graph and Twitter Cards out of the box
-- **Dark mode** — respects your visitors' system preference automatically
-- **Themes** — choose from built-in color themes or tweak CSS variables
-- **Comments** — optional [Giscus](https://giscus.app/) integration
-- **Syntax highlighting** — code blocks are highlighted automatically
-- **No dependencies on your machine** — no Node.js, no Ruby, no Go
+- **Zero local setup** - everything runs on GitHub Actions
+- **Markdown -> HTML** - write in Markdown, get a clean website
+- **RSS feed** - your readers can subscribe (`/feed.xml`)
+- **Sitemap** - search engines find your content (`/sitemap.xml`)
+- **SEO meta tags** - Open Graph and Twitter Cards out of the box
+- **Dark mode** - respects your visitors' system preference automatically
+- **Themes** - choose from built-in color themes or tweak CSS variables
+- **Comments** - optional [Giscus](https://giscus.app/) integration
+- **Syntax highlighting** - code blocks are highlighted automatically
+- **No dependencies on your machine** - no Node.js, no Ruby, no Go
 
 ## Customize your site
 
-Edit `SkunkUtils.fs` — you only need to change the values in quotes:
+Edit `SkunkUtils.fs` - you only need to change the values in quotes:
 
 ```fsharp
 let siteTitle = "My Blog"
@@ -50,9 +50,9 @@ let siteLanguage = "en"
 let siteAuthor = "Your Name"
 ```
 
-You don't need to know F# — just edit the text between the quotation marks.
+You don't need to know F# - just edit the text between the quotation marks.
 
-**Base URL examples** — set `siteBaseUrl` to match where your site is hosted:
+**Base URL examples** - set `siteBaseUrl` to match where your site is hosted:
 - GitHub project page: `https://YOUR-USERNAME.github.io/skunk-html`
 - GitHub user page (repo named `<user>.github.io`): `https://YOUR-USERNAME.github.io`
 - Custom domain: `https://example.com`
@@ -69,22 +69,22 @@ SkunkHTML ships with multiple color themes. To switch themes, copy the contents 
 | Terminal | `themes/theme-terminal.css` | Green-on-dark hacker aesthetic |
 | Ink | `themes/theme-ink.css` | Warm serif typography (newspaper-inspired) |
 
-All themes respect `prefers-color-scheme` — they look great in both light and dark mode.
+All themes respect `prefers-color-scheme` - they look great in both light and dark mode.
 
 ### Content structure
 
 - **Blog posts**: Markdown files in `markdown-blog/` whose names start with a digit. The file name is the publication date (e.g. `2025-03-24.md`). The post title comes from the first `# Heading` inside the file.
 - **Other pages**: Markdown files in `markdown-blog/` that don't start with a digit (e.g. `about.md`, `featured.md`)
-- **Front page**: `markdown-blog/index.md` — optional welcome content displayed above the post list
+- **Front page**: `markdown-blog/index.md` - optional welcome content displayed above the post list
 
 ### HTML fragments
 
 Customize the header, footer, and page head by editing files in `html/`:
 
-- `header.html` — site navigation and logo
-- `footer.html` — footer content
-- `head.html` — meta tags, CSS links, and favicons
-- `script_giscus.html` — Giscus comments configuration
+- `header.html` - site navigation and logo
+- `footer.html` - footer content
+- `head.html` - meta tags, CSS links, and favicons
+- `script_giscus.html` - Giscus comments configuration
 
 ## Folder structure
 
@@ -107,7 +107,7 @@ skunk-html/
 
 ## Optional: build locally
 
-You don't need this for normal use — GitHub Actions handles everything. But if you want to preview locally:
+You don't need this for normal use - GitHub Actions handles everything. But if you want to preview locally:
 
 ```bash
 git clone https://github.com/mg0x7BE/skunk-html.git
@@ -130,10 +130,10 @@ Suggestions, bug reports, and pull requests welcome. Use [discussions](https://g
 
 ## License
 
-[Unlicense](https://en.wikipedia.org/wiki/Unlicense) — do whatever you want with it.
+[Unlicense](https://en.wikipedia.org/wiki/Unlicense) - do whatever you want with it.
 
 ## Dependencies
 
-- [MVP.css](https://github.com/andybrewer/mvp) — styling
-- [microlight.js](https://github.com/asvd/microlight) — syntax highlighting
-- [FSharp.Formatting](https://github.com/fsprojects/FSharp.Formatting) — Markdown processing
+- [MVP.css](https://github.com/andybrewer/mvp) - styling
+- [microlight.js](https://github.com/asvd/microlight) - syntax highlighting
+- [FSharp.Formatting](https://github.com/fsprojects/FSharp.Formatting) - Markdown processing
