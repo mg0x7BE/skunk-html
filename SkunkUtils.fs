@@ -1,4 +1,4 @@
-﻿module SkunkUtils
+module SkunkUtils
 
 module Config =
     open System.IO
@@ -25,6 +25,14 @@ module Config =
     let outputScriptsDir = Path.Combine(outputDir, "scripts")
 
     let frontPageMarkdownFileName = "index.md"
+
+    // --- Site metadata (edit these for your site) ---
+    // Only change the values in quotes — the rest is just labels.
+    let siteTitle = "SkunkHTML"
+    let siteDescription = "The simplest blog on GitHub Pages. Fork, enable Pages, write Markdown."
+    let siteBaseUrl = "https://mg0x7be.github.io/skunk-html"  // No trailing slash. Include repo name if using project pages.
+    let siteLanguage = "en"
+    let siteAuthor = ""  // Optional, used in RSS feed and meta tags
 
 module Disk =
     open System.IO
@@ -62,3 +70,28 @@ module Url =
         input.ToLowerInvariant()
         |> fun text -> Regex.Replace(text, @"[^\w\s]", "") // Remove all non-alphanumeric characters
         |> fun text -> Regex.Replace(text, @"\s+", "-") // Replace spaces with hyphens
+
+    /// Ensure base URL has no trailing slash
+    let normalizeBaseUrl (url: string) =
+        url.TrimEnd('/')
+
+module Xml =
+    /// Escape special characters for XML content
+    let escape (input: string) =
+        input
+            .Replace("&", "&amp;")
+            .Replace("<", "&lt;")
+            .Replace(">", "&gt;")
+            .Replace("\"", "&quot;")
+            .Replace("'", "&apos;")
+
+module MarkdownUtils =
+    open System.Text.RegularExpressions
+
+    /// Strip basic Markdown syntax to produce plain text (for meta descriptions)
+    let stripMarkdownSyntax (input: string) =
+        input
+        |> fun s -> Regex.Replace(s, @"\[([^\]]+)\]\([^\)]+\)", "$1")  // [text](url) -> text
+        |> fun s -> Regex.Replace(s, @"[*_]{1,3}", "")                // bold/italic markers
+        |> fun s -> Regex.Replace(s, @"`([^`]+)`", "$1")              // inline code
+        |> fun s -> s.Trim()

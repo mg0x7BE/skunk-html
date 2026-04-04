@@ -1,0 +1,103 @@
+/* SkunkHTML Theme: Ink
+   A warm, newspaper-inspired reading theme with serif typography.
+   Respects user's color scheme preference.
+   To use: replace the contents of css/tweaks.css with this file. */
+
+:root {
+    --color-accent: #d4a37415;
+    --color-bg: #faf8f5;
+    --color-bg-secondary: #eae6e0;
+    --color-link: #a0522d;
+    --color-secondary: #8b0000;
+    --color-secondary-accent: #8b00000b;
+    --color-shadow: #ddd8d0;
+    --color-table: #a0522d;
+    --color-text: #2c2416;
+    --color-text-secondary: #6b5c4d;
+    --color-scrollbar: #c4b5a5;
+    --font-family: Georgia, "Times New Roman", "Noto Serif", serif;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root[color-mode="user"] {
+        --color-accent: #d4a37426;
+        --color-bg: #1a1610;
+        --color-bg-secondary: #2a241c;
+        --color-link: #d4a374;
+        --color-secondary: #e87070;
+        --color-secondary-accent: #e8707015;
+        --color-shadow: #0d0b08;
+        --color-table: #d4a374;
+        --color-text: #d4cdc4;
+        --color-text-secondary: #9a8e80;
+        --color-scrollbar: #3a3228;
+    }
+}
+
+nav a img {
+    border-style: outset;
+    border-color: var(--color-link);
+    border-width: 1px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+blockquote,
+blockquote p {
+    display: block;
+    font-size: medium;
+    line-height: var(--line-height);
+    text-align: var(--justify-normal);
+    border-right: none;
+    border-left: 0.25rem solid var(--color-secondary);
+    padding: 0 0 0 1rem;
+    margin-left: 0;
+    max-width: 100%;
+    font-style: italic;
+}
+
+blockquote p {
+    border-left: none;
+}
+
+blockquote footer {
+    color: var(--color-text);
+    display: block;
+    font-size: small;
+    line-height: var(--line-height);
+    padding: 1.5rem 0;
+}
+
+a {
+    text-decoration: none;
+    word-break: break-word;
+}
+
+* {
+    scrollbar-width: auto;
+}
+
+nav {
+    margin-bottom: 1rem;
+}
+
+p img,
+pre,
+pre code,
+pre samp {
+    max-width: 100%;
+}
+
+table td[align],
+table th[align] {
+    text-align: left !important;
+}
+
+table td[align="center"],
+table th[align="center"] {
+    text-align: center !important;
+}
+
+table td[align="right"],
+table th[align="right"] {
+    text-align: right !important;
+}

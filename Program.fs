@@ -1,4 +1,4 @@
-﻿open System.IO
+open System.IO
 open SkunkUtils
 open SkunkHtml
 
@@ -29,25 +29,43 @@ let main argv =
         |> Array.map (fun file ->
             let date = Path.GetFileNameWithoutExtension(file)
             let title = extractTitleFromMarkdownFile(file)
+            let description = extractDescriptionFromMarkdownFile(file)
             let urlFriendlyTitle = Url.toUrlFriendly title
-            (date, title, $"{urlFriendlyTitle}.html"))
-        |> Array.sortByDescending (fun (date, _, _) -> date)
+            (date, title, $"{urlFriendlyTitle}.html", description))
+        |> Array.sortByDescending (fun (date, _, _, _) -> date)
         |> Array.toList
+
+    let otherMarkdownFiles =
+        allMarkdownFiles
+        |> Array.filter (fun file -> not (isArticle file))
+        |> Array.filter (fun file -> Path.GetFileName(file) <> Config.frontPageMarkdownFileName)
+
+    let otherPageLinks =
+        otherMarkdownFiles
+        |> Array.map (fun file ->
+            let title = extractTitleFromMarkdownFile(file)
+            $"{Url.toUrlFriendly title}.html")
+        |> Array.toList
+
+    let listForIndex =
+        listOfAllBlogArticles
+        |> List.map (fun (date, title, link, _) -> (date, title, link))
 
     let createBlogArticlePages () =
         blogArticleFiles
         |> Array.iter (createPage header footer)
 
     let createOtherPages () =
-        allMarkdownFiles
-        |> Array.filter (fun file -> not (isArticle file))
-        |> Array.filter (fun file -> Path.GetFileName(file) <> Config.frontPageMarkdownFileName)
+        otherMarkdownFiles
         |> Array.iter (createPage header footer)
 
-    createIndexPage header footer listOfAllBlogArticles
+    createIndexPage header footer listForIndex
     createOtherPages ()
     createBlogArticlePages ()
 
+    // Generate RSS feed and sitemap
+    createRssFeed listOfAllBlogArticles
+    createSitemap listOfAllBlogArticles otherPageLinks
 
     Disk.copyFolderToOutput Config.fontsDir Config.outputFontsDir
     Disk.copyFolderToOutput Config.cssDir Config.outputCssDir

@@ -1,0 +1,103 @@
+/* SkunkHTML Theme: Terminal
+   A green-on-dark terminal aesthetic that respects user's color scheme preference.
+   Light mode: warm off-white with green accents.
+   Dark mode: classic terminal green on near-black.
+   To use: replace the contents of css/tweaks.css with this file. */
+
+:root {
+    --color-accent: #2ea04315;
+    --color-bg: #f6f8f0;
+    --color-bg-secondary: #e2e6d9;
+    --color-link: #1a7f37;
+    --color-secondary: #0550ae;
+    --color-secondary-accent: #0550ae0b;
+    --color-shadow: #d0d7c5;
+    --color-table: #1a7f37;
+    --color-text: #1b1f23;
+    --color-text-secondary: #57606a;
+    --color-scrollbar: #8dc572;
+    --font-family: "Courier New", Courier, "Liberation Mono", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root[color-mode="user"] {
+        --color-accent: #39d35326;
+        --color-bg: #0a0e0a;
+        --color-bg-secondary: #141a14;
+        --color-link: #39d353;
+        --color-secondary: #79c0ff;
+        --color-secondary-accent: #79c0ff15;
+        --color-shadow: #010201;
+        --color-table: #39d353;
+        --color-text: #b5e8b5;
+        --color-text-secondary: #7dab7d;
+        --color-scrollbar: #1e3a1e;
+    }
+}
+
+nav a img {
+    border-style: outset;
+    border-color: var(--color-link);
+    border-width: 1px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+blockquote,
+blockquote p {
+    display: block;
+    font-size: medium;
+    line-height: var(--line-height);
+    text-align: var(--justify-normal);
+    border-right: none;
+    border-left: 0.25rem solid var(--color-link);
+    padding: 0 0 0 1rem;
+    margin-left: 0;
+    max-width: 100%;
+}
+
+blockquote p {
+    border-left: none;
+}
+
+blockquote footer {
+    color: var(--color-text);
+    display: block;
+    font-size: small;
+    line-height: var(--line-height);
+    padding: 1.5rem 0;
+}
+
+a {
+    text-decoration: none;
+    word-break: break-word;
+}
+
+* {
+    scrollbar-width: auto;
+}
+
+nav {
+    margin-bottom: 1rem;
+}
+
+p img,
+pre,
+pre code,
+pre samp {
+    max-width: 100%;
+}
+
+table td[align],
+table th[align] {
+    text-align: left !important;
+}
+
+table td[align="center"],
+table th[align="center"] {
+    text-align: center !important;
+}
+
+table td[align="right"],
+table th[align="right"] {
+    text-align: right !important;
+}
