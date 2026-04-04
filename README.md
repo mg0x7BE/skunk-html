@@ -19,11 +19,9 @@ Write Markdown, push to GitHub, your site updates automatically.
 
 ## Get started in 60 seconds
 
-1. **Fork** this repository — or click **"Use this template"** to create a fresh copy
+1. **Fork** this repository
 2. Go to **Settings > Pages > Source: GitHub Actions**
 3. Your blog is live at `https://YOUR-USERNAME.github.io/skunk-html/`
-
-> **Fork vs. template** — both work the same way. A fork keeps a link to this repo so you can pull future updates. A template gives you a clean repo with no connection to the original — a fresh start. Pick whichever you prefer.
 
 To publish a post: add a Markdown file to the `markdown-blog/` folder. The file name **is the date** - name it like `2025-03-24.md` and start the file with a `# Title` heading. The title comes from the heading, the date comes from the file name. Push. Done.
 
