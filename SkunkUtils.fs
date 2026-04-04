@@ -27,7 +27,7 @@ module Config =
     let frontPageMarkdownFileName = "index.md"
 
     // --- Site metadata (edit these for your site) ---
-    // Only change the values in quotes — the rest is just labels.
+    // Only change the values in quotes - the rest is just labels.
     let siteTitle = "SkunkHTML"
     let siteDescription = "The simplest blog on GitHub Pages. Fork, enable Pages, write Markdown."
     let siteBaseUrl = "https://mg0x7be.github.io/skunk-html"  // No trailing slash. Include repo name if using project pages.

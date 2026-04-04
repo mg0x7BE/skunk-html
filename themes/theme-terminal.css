@@ -4,6 +4,8 @@
    Dark mode: classic terminal green on near-black.
    To use: replace the contents of css/tweaks.css with this file. */
 
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
 :root {
     --color-accent: #2ea04315;
     --color-bg: #f6f8f0;
@@ -16,7 +18,7 @@
     --color-text: #1b1f23;
     --color-text-secondary: #57606a;
     --color-scrollbar: #8dc572;
-    --font-family: "Courier New", Courier, "Liberation Mono", monospace;
+    --font-family: "JetBrains Mono", "Courier New", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -100,4 +102,8 @@ table th[align="center"] {
 table td[align="right"],
 table th[align="right"] {
     text-align: right !important;
+}
+
+body {
+    font-weight: 400;
 }
