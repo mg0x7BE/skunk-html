@@ -8,7 +8,7 @@
 
 **The simplest way to run a blog on GitHub Pages.**
 
-Fork this repo. Enable GitHub Pages. You have a blog. That's it.
+Fork this repo (or use it as a template). Enable GitHub Pages. You have a blog. That's it.
 
 ![SkunkHTML](https://mg0x7BE.github.io/skunk-html/images/skunk-final.png)
 
