@@ -2,6 +2,19 @@
    Dark mode works automatically because color-mode="user" is set on <html>.
    For alternative themes, see the themes/ folder: theme-ocean.css, theme-terminal.css, theme-ink.css */
 
+:root {
+    --color-link: #878BEE;
+    --color-table: #878BEE;
+    --color-accent: #878BEE15;
+}
+@media (prefers-color-scheme: dark) {
+    :root[color-mode="user"] {
+        --color-bg: #231D29;
+        --color-link: #8F8CEF;
+        --color-table: #8F8CEF;
+        --color-accent: #8F8CEF4f;
+    }
+}
 nav a img {
     border-style: outset;
     border-color: var(--color-link);
