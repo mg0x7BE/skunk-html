@@ -9,7 +9,7 @@ module SkunkHtml
     let generateFinalHtml (head: string) (header: string) (footer: string) (content: string) (script: string) =
         $"""
         <!DOCTYPE html>
-        <html lang="{Config.siteLanguage}" color-mode="user">
+        <html lang="{Config.siteLanguage}" data-color-mode="user">
         <head>
             {head}
         </head>
@@ -20,7 +20,7 @@ module SkunkHtml
             <main>
                 {content}
             </main>
-            <hr />
+            <hr>
             <footer>
                 {footer}
             </footer>
@@ -42,19 +42,19 @@ module SkunkHtml
             let desc = if String.IsNullOrWhiteSpace(description) then Config.siteDescription else description
             let authorMeta =
                 if String.IsNullOrWhiteSpace(Config.siteAuthor) then ""
-                else $"""<meta name="author" content="{Xml.escape Config.siteAuthor}" />"""
+                else $"""<meta name="author" content="{Xml.escape Config.siteAuthor}">"""
             $"""
-            <meta name="description" content="{Xml.escape desc}" />
+            <meta name="description" content="{Xml.escape desc}">
             {authorMeta}
-            <meta property="og:title" content="{Xml.escape fullTitle}" />
-            <meta property="og:description" content="{Xml.escape desc}" />
-            <meta property="og:type" content="{ogType}" />
-            <meta property="og:url" content="{canonicalUrl}" />
-            <meta name="twitter:card" content="summary" />
-            <meta name="twitter:title" content="{Xml.escape fullTitle}" />
-            <meta name="twitter:description" content="{Xml.escape desc}" />
-            <link rel="canonical" href="{canonicalUrl}" />
-            <link rel="alternate" type="application/rss+xml" title="{Xml.escape Config.siteTitle}" href="{baseUrl}/feed.xml" />
+            <meta property="og:title" content="{Xml.escape fullTitle}">
+            <meta property="og:description" content="{Xml.escape desc}">
+            <meta property="og:type" content="{ogType}">
+            <meta property="og:url" content="{canonicalUrl}">
+            <meta name="twitter:card" content="summary">
+            <meta name="twitter:title" content="{Xml.escape fullTitle}">
+            <meta name="twitter:description" content="{Xml.escape desc}">
+            <link rel="canonical" href="{canonicalUrl}">
+            <link rel="alternate" type="application/rss+xml" title="{Xml.escape Config.siteTitle}" href="{baseUrl}/feed.xml">
             """
 
         headTemplate.Replace("{{site-title}}", fullTitle) + seoMeta
@@ -138,7 +138,7 @@ module SkunkHtml
             $"""
         {frontPageContentHtml}
         <section class="publications">
-            <h1>blog entries</h1>
+            <h2>blog entries</h2>
             <ul>
             {listOfAllBlogArticlesContentHtml}
             </ul>

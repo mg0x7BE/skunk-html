@@ -1,5 +1,5 @@
 /* SkunkHTML default tweaks
-   Dark mode works automatically because color-mode="user" is set on <html>.
+   Dark mode works automatically because data-color-mode="user" is set on <html>.
    For alternative themes, see the themes/ folder: theme-ocean.css, theme-terminal.css, theme-ink.css */
 
 :root {
@@ -8,7 +8,7 @@
     --color-accent: #878BEE15;
 }
 @media (prefers-color-scheme: dark) {
-    :root[color-mode="user"] {
+    :root[data-color-mode="user"] {
         --color-bg: #231D29;
         --color-link: #8F8CEF;
         --color-table: #8F8CEF;

@@ -18,7 +18,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    :root[color-mode="user"] {
+    :root[data-color-mode="user"] {
         --color-accent: #388bfd26;
         --color-bg: #0d1117;
         --color-bg-secondary: #161b22;
