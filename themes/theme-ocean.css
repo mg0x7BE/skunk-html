@@ -1,0 +1,101 @@
+/* SkunkHTML Theme: Ocean
+   A cool blue-toned theme that respects user's color scheme preference.
+   To use: replace the contents of css/tweaks.css with this file,
+   or rename this file to tweaks.css and place it in css/ */
+
+:root {
+    --color-accent: #0a84ff15;
+    --color-bg: #fafbfc;
+    --color-bg-secondary: #e1e4e8;
+    --color-link: #0366d6;
+    --color-secondary: #6f42c1;
+    --color-secondary-accent: #6f42c10b;
+    --color-shadow: #e1e4e8;
+    --color-table: #0366d6;
+    --color-text: #24292e;
+    --color-text-secondary: #586069;
+    --color-scrollbar: #c8d1d9;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root[data-color-mode="user"] {
+        --color-accent: #388bfd26;
+        --color-bg: #0d1117;
+        --color-bg-secondary: #161b22;
+        --color-link: #58a6ff;
+        --color-secondary: #bc8cff;
+        --color-secondary-accent: #bc8cff15;
+        --color-shadow: #010409;
+        --color-table: #58a6ff;
+        --color-text: #c9d1d9;
+        --color-text-secondary: #8b949e;
+        --color-scrollbar: #30363d;
+    }
+}
+
+nav a img {
+    border-style: outset;
+    border-color: var(--color-link);
+    border-width: 1px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+blockquote,
+blockquote p {
+    display: block;
+    font-size: medium;
+    line-height: var(--line-height);
+    text-align: var(--justify-normal);
+    border-right: none;
+    border-left: 0.25rem solid var(--color-accent);
+    padding: 0 0 0 1rem;
+    margin-left: 0;
+    max-width: 100%;
+}
+
+blockquote p {
+    border-left: none;
+}
+
+blockquote footer {
+    color: var(--color-text);
+    display: block;
+    font-size: small;
+    line-height: var(--line-height);
+    padding: 1.5rem 0;
+}
+
+a {
+    text-decoration: none;
+    word-break: break-word;
+}
+
+* {
+    scrollbar-width: auto;
+}
+
+nav {
+    margin-bottom: 1rem;
+}
+
+p img,
+pre,
+pre code,
+pre samp {
+    max-width: 100%;
+}
+
+table td[align],
+table th[align] {
+    text-align: left !important;
+}
+
+table td[align="center"],
+table th[align="center"] {
+    text-align: center !important;
+}
+
+table td[align="right"],
+table th[align="right"] {
+    text-align: right !important;
+}

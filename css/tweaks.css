@@ -1,0 +1,83 @@
+/* SkunkHTML default tweaks
+   Dark mode works automatically because data-color-mode="user" is set on <html>.
+   For alternative themes, see the themes/ folder: theme-ocean.css, theme-terminal.css, theme-ink.css */
+
+:root {
+    --color-link: #878BEE;
+    --color-table: #878BEE;
+    --color-accent: #878BEE15;
+}
+@media (prefers-color-scheme: dark) {
+    :root[data-color-mode="user"] {
+        --color-bg: #231D29;
+        --color-link: #8F8CEF;
+        --color-table: #8F8CEF;
+        --color-accent: #8F8CEF4f;
+    }
+}
+nav a img {
+    border-style: outset;
+    border-color: var(--color-link);
+    border-width: 1px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+blockquote,
+blockquote p {
+    display: block;
+    font-size: medium;
+    line-height: var(--line-height);
+    text-align: var(--justify-normal);
+    border-right: none;
+    border-left: 0.25rem solid var(--color-accent);
+    padding: 0 0 0 1rem;
+    margin-left: 0;
+    max-width: 100%;
+}
+
+blockquote p {
+    border-left: none;
+}
+
+blockquote footer {
+    color: var(--color-text);
+    display: block;
+    font-size: small;
+    line-height: var(--line-height);
+    padding: 1.5rem 0;
+}
+
+a {
+    text-decoration: none;
+    word-break: break-word;
+}
+
+* {
+    scrollbar-width: auto;
+}
+
+nav {
+    margin-bottom: 1rem;
+}
+
+p img,
+pre,
+pre code,
+pre samp {
+    max-width: 100%;
+}
+
+table td[align],
+table th[align] {
+    text-align: left !important;
+}
+
+table td[align="center"],
+table th[align="center"] {
+    text-align: center !important;
+}
+
+table td[align="right"],
+table th[align="right"] {
+    text-align: right !important;
+}
