@@ -3,6 +3,7 @@
    For alternative themes, see the themes/ folder: theme-ocean.css, theme-terminal.css, theme-ink.css */
 
 :root {
+    --width-content: 800px;
     --color-link: #878BEE;
     --color-table: #878BEE;
     --color-accent: #878BEE15;

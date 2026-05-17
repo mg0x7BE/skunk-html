@@ -4,6 +4,7 @@
    or rename this file to tweaks.css and place it in css/ */
 
 :root {
+    --width-content: 800px;
     --color-accent: #0a84ff15;
     --color-bg: #fafbfc;
     --color-bg-secondary: #e1e4e8;

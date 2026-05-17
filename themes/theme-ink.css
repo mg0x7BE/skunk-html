@@ -4,6 +4,7 @@
    To use: replace the contents of css/tweaks.css with this file. */
 
 :root {
+    --width-content: 800px;
     --color-accent: #d4a37415;
     --color-bg: #faf8f5;
     --color-bg-secondary: #eae6e0;

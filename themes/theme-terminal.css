@@ -7,6 +7,7 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
+    --width-content: 800px;
     --color-accent: #2ea04315;
     --color-bg: #f6f8f0;
     --color-bg-secondary: #e2e6d9;
