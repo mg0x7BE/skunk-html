@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Build and Deploy to GitHub Pages
 
 on:
   push:
@@ -8,11 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_and_deploy:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -22,10 +19,7 @@ jobs:
         with:
           dotnet-version: 10
 
-      - name: Build project
-        run: dotnet build skunk-html.fsproj
-
-      - name: Run F# code to generate HTML
+      - name: Generate static site
         run: dotnet run --project skunk-html.fsproj
 
       - name: Upload artifact
@@ -33,6 +27,14 @@ jobs:
         with:
           path: "./skunk-html-output"
 
+  deploy:
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
