@@ -1,48 +1,10 @@
 module SkunkUtils
 
-module Config =
-    open System.IO
-
-    let sourceDir = __SOURCE_DIRECTORY__
-
-    let markdownDir = Path.Combine(sourceDir, "markdown-blog")
-    let htmlDir = Path.Combine(sourceDir, "html")
-    let outputDir = Path.Combine(sourceDir, "skunk-html-output")
-
-    let cssDir = Path.Combine(sourceDir, "css")
-    let outputCssDir = Path.Combine(outputDir, "css")
-
-    let fontsDir = Path.Combine(sourceDir, "fonts")
-    let outputFontsDir = Path.Combine(outputDir, "fonts")
-
-    let imagesDir = Path.Combine(markdownDir, "images")
-    let outputImagesDir = Path.Combine(outputDir, "images")
-
-    let assetsDir = Path.Combine(sourceDir, "assets")
-    let outputAssetsDir = Path.Combine(outputDir, "assets")
-
-    let scriptsDir = Path.Combine(sourceDir, "scripts")
-    let outputScriptsDir = Path.Combine(outputDir, "scripts")
-
-    let frontPageMarkdownFileName = "index.md"
-
-    // --- Site metadata (edit these for your site) ---
-    // Only change the values in quotes - the rest is just labels.
-    let siteTitle = "SkunkHTML"
-    let siteDescription = "The simplest blog on GitHub Pages. Fork, enable Pages, write Markdown."
-    let siteBaseUrl = "https://mg0x7be.github.io/skunk-html"  // No trailing slash. Include repo name if using project pages.
-    let siteLanguage = "en"
-    let siteAuthor = ""  // Optional, used in RSS feed and meta tags
-
 module Disk =
     open System.IO
 
     let readFile (path: string) =
-        path
-        |> File.Exists
-        |> function
-            | true -> File.ReadAllText(path)
-            | false -> ""
+        if File.Exists(path) then File.ReadAllText(path) else ""
 
     let writeFile (path: string) (content: string) =
         File.WriteAllText(path, content)

@@ -1,227 +1,268 @@
 module SkunkHtml
-    open SkunkUtils
-    open System
-    open System.IO
-    open FSharp.Formatting.Markdown
 
-    let private baseUrl = Url.normalizeBaseUrl Config.siteBaseUrl
+open SkunkUtils
+open System
+open System.Globalization
+open System.IO
+open FSharp.Formatting.Markdown
 
-    let generateFinalHtml (head: string) (header: string) (footer: string) (content: string) (script: string) =
+/// A single markdown page. Blog posts carry a publication date taken from the
+/// file name (e.g. 2025-03-24.md); other pages (about, links, ...) do not.
+type Page =
+    { SourcePath: string
+      Title: string
+      Link: string
+      Description: string
+      Date: string option }
+
+let private baseUrl = Url.normalizeBaseUrl Config.siteBaseUrl
+
+let private headTemplate =
+    Path.Combine(Config.htmlDir, "head.html")
+    |> Disk.readFile
+
+let private highlightingScript =
+    Path.Combine(Config.htmlDir, "script_syntax_highlighting.html")
+    |> Disk.readFile
+
+let private giscusScript =
+    Path.Combine(Config.htmlDir, "script_giscus.html")
+    |> Disk.readFile
+
+let generateFinalHtml (head: string) (header: string) (footer: string) (content: string) (script: string) =
+    $"""
+    <!DOCTYPE html>
+    <html lang="{Config.siteLanguage}" data-color-mode="user">
+    <head>
+        {head}
+    </head>
+    <body>
+        <header>
+            {header}
+        </header>
+        <main>
+            {content}
+        </main>
+        <hr>
+        <footer>
+            {footer}
+        </footer>
+        <script>
+            {script}
+        </script>
+    </body>
+    </html>
+    """
+
+let head (titleSuffix: string) (description: string) (canonicalUrl: string) (ogType: string) =
+    let fullTitle = Config.siteTitle + titleSuffix
+
+    let seoMeta =
+        let desc = if String.IsNullOrWhiteSpace(description) then Config.siteDescription else description
+        let authorMeta =
+            if String.IsNullOrWhiteSpace(Config.siteAuthor) then ""
+            else $"""<meta name="author" content="{Xml.escape Config.siteAuthor}">"""
+        let imageMeta =
+            if String.IsNullOrWhiteSpace(Config.siteImage) then ""
+            else
+                let imageUrl = $"{baseUrl}/{Config.siteImage.TrimStart('/')}"
+                $"""<meta property="og:image" content="{imageUrl}">
+        <meta name="twitter:image" content="{imageUrl}">"""
         $"""
-        <!DOCTYPE html>
-        <html lang="{Config.siteLanguage}" data-color-mode="user">
-        <head>
-            {head}
-        </head>
-        <body>
-            <header>
-                {header}
-            </header>
-            <main>
-                {content}
-            </main>
-            <hr>
-            <footer>
-                {footer}
-            </footer>
-            <script>
-                {script}
-            </script>
-        </body>
-        </html>
+        <meta name="description" content="{Xml.escape desc}">
+        {authorMeta}
+        <meta property="og:title" content="{Xml.escape fullTitle}">
+        <meta property="og:description" content="{Xml.escape desc}">
+        <meta property="og:type" content="{ogType}">
+        <meta property="og:url" content="{canonicalUrl}">
+        {imageMeta}
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{Xml.escape fullTitle}">
+        <meta name="twitter:description" content="{Xml.escape desc}">
+        <link rel="canonical" href="{canonicalUrl}">
+        <link rel="alternate" type="application/rss+xml" title="{Xml.escape Config.siteTitle}" href="{baseUrl}/feed.xml">
         """
 
-    let head (titleSuffix: string) (description: string) (canonicalUrl: string) (ogType: string) =
-        let headTemplate =
-            Path.Combine(Config.htmlDir, "head.html")
-            |> Disk.readFile
+    headTemplate.Replace("{{site-title}}", Xml.escape fullTitle) + seoMeta
 
-        let fullTitle = Config.siteTitle + titleSuffix
+let private isArticle (file: string) =
+    Char.IsDigit(Path.GetFileName(file)[0])
 
-        let seoMeta =
-            let desc = if String.IsNullOrWhiteSpace(description) then Config.siteDescription else description
-            let authorMeta =
-                if String.IsNullOrWhiteSpace(Config.siteAuthor) then ""
-                else $"""<meta name="author" content="{Xml.escape Config.siteAuthor}">"""
-            $"""
-            <meta name="description" content="{Xml.escape desc}">
-            {authorMeta}
-            <meta property="og:title" content="{Xml.escape fullTitle}">
-            <meta property="og:description" content="{Xml.escape desc}">
-            <meta property="og:type" content="{ogType}">
-            <meta property="og:url" content="{canonicalUrl}">
-            <meta name="twitter:card" content="summary">
-            <meta name="twitter:title" content="{Xml.escape fullTitle}">
-            <meta name="twitter:description" content="{Xml.escape desc}">
-            <link rel="canonical" href="{canonicalUrl}">
-            <link rel="alternate" type="application/rss+xml" title="{Xml.escape Config.siteTitle}" href="{baseUrl}/feed.xml">
-            """
+let loadPage (markdownFilePath: string) : Page =
+    let lines = File.ReadAllLines(markdownFilePath)
 
-        headTemplate.Replace("{{site-title}}", fullTitle) + seoMeta
-
-    let isArticle (file: string) =
-        System.Char.IsDigit(Path.GetFileName(file).[0])
-
-    let highlightingScript =
-        Path.Combine(Config.htmlDir, "script_syntax_highlighting.html")
-        |> Disk.readFile
-
-    let extractTitleFromMarkdownFile (markdownFilePath: string) =
-        File.ReadAllLines(markdownFilePath)
+    let title =
+        lines
         |> Array.tryFind _.StartsWith("# ")
-        |> Option.defaultValue "# No Title"
-        |> _.TrimStart('#').Trim()
+        |> Option.map _.TrimStart('#').Trim()
+        |> Option.defaultValue Config.untitledPageTitle
 
-    let extractDescriptionFromMarkdownFile (markdownFilePath: string) =
-        File.ReadAllLines(markdownFilePath)
+    let description =
+        lines
         |> Array.filter (fun line -> not (String.IsNullOrWhiteSpace(line)))
         |> Array.filter (fun line -> not (line.StartsWith("#")))
         |> Array.tryHead
         |> Option.defaultValue ""
         |> MarkdownUtils.stripMarkdownSyntax
-        |> fun s -> if s.Length > 160 then s.[..159] + "..." else s
+        |> fun s -> if s.Length > 160 then s[..159] + "..." else s
 
-    let createPage (header: string) (footer: string) (markdownFilePath: string) =
-        let title = extractTitleFromMarkdownFile(markdownFilePath)
-        let description = extractDescriptionFromMarkdownFile(markdownFilePath)
-        let fileName = Url.toUrlFriendly title
-        let outputHtmlFilePath = Path.Combine(Config.outputDir, fileName + ".html")
-        let canonicalUrl = $"{baseUrl}/{fileName}.html"
-        let markdownContent = File.ReadAllText(markdownFilePath)
+    let date =
+        if isArticle markdownFilePath then
+            Some(Path.GetFileNameWithoutExtension(markdownFilePath))
+        else
+            None
 
-        let htmlContent =
-            match isArticle markdownFilePath with
-            | false -> Markdown.ToHtml(markdownContent)
-            | true ->
-                let date = Path.GetFileNameWithoutExtension(markdownFilePath)
+    { SourcePath = markdownFilePath
+      Title = title
+      Link = Url.toUrlFriendly title + ".html"
+      Description = description
+      Date = date }
 
-                let publicationDate =
-                    $"""<p class="publication-date">Published on <time datetime="{date}">{date}</time></p>"""
+let createPage (header: string) (footer: string) (page: Page) =
+    let canonicalUrl = $"{baseUrl}/{page.Link}"
+    let markdownContent = File.ReadAllText(page.SourcePath)
 
-                let giscusScript =
-                    Path.Combine(Config.htmlDir, "script_giscus.html")
-                    |> Disk.readFile
+    let htmlContent, ogType =
+        match page.Date with
+        | None -> Markdown.ToHtml(markdownContent), "website"
+        | Some date ->
+            let publicationDate =
+                $"""<p class="publication-date">{Config.publishedOnText} <time datetime="{date}">{date}</time></p>"""
+            let articleHtml = Markdown.ToHtml(markdownContent + "\n\n" + publicationDate + "\n\n")
+            articleHtml + giscusScript, "article"
 
-                let mainHtmlContent = Markdown.ToHtml(
-                    markdownContent
-                    + "\n\n"
-                    + publicationDate
-                    + "\n\n"
-                )
-                mainHtmlContent  + giscusScript
+    let finalHtmlContent =
+        generateFinalHtml (head (" - " + page.Title) page.Description canonicalUrl ogType) header footer htmlContent highlightingScript
 
-        let ogType = if isArticle markdownFilePath then "article" else "website"
+    printfn $"Processing {Path.GetFileName page.SourcePath} ->"
+    Disk.writeFile (Path.Combine(Config.outputDir, page.Link)) finalHtmlContent
 
-        let finalHtmlContent =
-            generateFinalHtml (head (" - " + title) description canonicalUrl ogType) header footer htmlContent highlightingScript
+let createIndexPage (header: string) (footer: string) (articles: Page list) =
+    let frontPageMarkdownFilePath = Path.Combine(Config.markdownDir, Config.frontPageMarkdownFileName)
 
-        printfn $"Processing {Path.GetFileName markdownFilePath} ->"
-        Disk.writeFile outputHtmlFilePath finalHtmlContent
+    let frontPageContentHtml =
+        if File.Exists(frontPageMarkdownFilePath) then
+            printfn $"Processing {Path.GetFileName frontPageMarkdownFilePath} ->"
+            Markdown.ToHtml(File.ReadAllText(frontPageMarkdownFilePath))
+        else
+            printfn $"Warning! File {Config.frontPageMarkdownFileName} does not exist! The main page will only contain blog entries, without a welcome message"
+            ""
 
-    let createIndexPage (header: string) (footer: string) (listOfAllBlogArticles: (string * string * string) list) =
-        let frontPageMarkdownFilePath = Path.Combine(Config.markdownDir, Config.frontPageMarkdownFileName)
+    let articleListHtml =
+        articles
+        |> List.map (fun article ->
+            let datePrefix =
+                match article.Date with
+                | Some date -> $"{date}: "
+                | None -> ""
+            $"""<li>{datePrefix}<a href="{article.Link}">{Xml.escape article.Title}</a></li>""")
+        |> String.concat "\n"
 
-        let frontPageContentHtml =
-            if File.Exists(frontPageMarkdownFilePath) then
-                printfn $"Processing {Path.GetFileName frontPageMarkdownFilePath} ->"
-                Markdown.ToHtml(File.ReadAllText(frontPageMarkdownFilePath))
-            else
-                printfn $"Warning! File {Config.frontPageMarkdownFileName} does not exist! The main page will only contain blog entries, without a welcome message"
-                ""
-
-        let listOfAllBlogArticlesContentHtml =
-            listOfAllBlogArticles
-            |> List.map (fun (date, title, link) -> $"""<li>{date}: <a href="{link}">{title}</a></li>""")
-            |> String.concat "\n"
-
-        let content =
-            $"""
+    let content =
+        $"""
         {frontPageContentHtml}
         <section class="publications">
-            <h2>blog entries</h2>
+            <h2>{Config.blogEntriesHeading}</h2>
             <ul>
-            {listOfAllBlogArticlesContentHtml}
+            {articleListHtml}
             </ul>
         </section>
         """
 
-        let canonicalUrl = baseUrl + "/"
-        let frontPageHtmlContent = generateFinalHtml (head "" Config.siteDescription canonicalUrl "website") header footer content highlightingScript
-        let indexHtmlFilePath = Path.Combine(Config.outputDir, "index.html")
+    let canonicalUrl = baseUrl + "/"
+    let frontPageHtmlContent = generateFinalHtml (head "" Config.siteDescription canonicalUrl "website") header footer content highlightingScript
 
-        Disk.writeFile indexHtmlFilePath frontPageHtmlContent
+    Disk.writeFile (Path.Combine(Config.outputDir, "index.html")) frontPageHtmlContent
 
-    // --- RSS Feed Generation ---
-    let createRssFeed (articles: (string * string * string * string) list) =
-        let authorElement =
-            if String.IsNullOrWhiteSpace(Config.siteAuthor) then ""
-            else $"    <managingEditor>{Xml.escape Config.siteAuthor}</managingEditor>\n"
+/// Auto-generated 404 page, served by GitHub Pages for any missing URL.
+/// The <base> tag makes relative links work at any path depth. Written before
+/// the regular pages, so an explicit page with the same file name wins.
+let createNotFoundPage (header: string) (footer: string) =
+    let content =
+        $"""
+        <h1>404</h1>
+        <p>{Config.notFoundMessage}</p>
+        <p><a href="index.html">{Config.notFoundBackText}</a></p>
+        """
 
-        let items =
-            articles
-            |> List.map (fun (date, title, link, description) ->
-                let pubDate =
-                    match DateTime.TryParse(date) with
-                    | true, dt -> dt.ToString("R")
-                    | _ -> date
-                let desc = if String.IsNullOrWhiteSpace(description) then Xml.escape title else Xml.escape description
-                "    <item>\n"
-                + $"      <title>{Xml.escape title}</title>\n"
-                + $"      <link>{baseUrl}/{link}</link>\n"
-                + $"      <guid>{baseUrl}/{link}</guid>\n"
-                + $"      <pubDate>{pubDate}</pubDate>\n"
-                + $"      <description>{desc}</description>\n"
-                + "    </item>")
-            |> String.concat "\n"
+    let baseTag = $"""<base href="{baseUrl}/">"""
+    let headContent = baseTag + head (" - " + Config.notFoundTitle) "" $"{baseUrl}/404.html" "website"
+    let finalHtmlContent = generateFinalHtml headContent header footer content highlightingScript
 
-        let lastBuildDate = DateTime.UtcNow.ToString("R")
+    Disk.writeFile (Path.Combine(Config.outputDir, "404.html")) finalHtmlContent
 
-        let feed =
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            + "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n"
-            + "  <channel>\n"
-            + $"    <title>{Xml.escape Config.siteTitle}</title>\n"
-            + $"    <link>{baseUrl}</link>\n"
-            + $"    <description>{Xml.escape Config.siteDescription}</description>\n"
-            + $"    <language>{Config.siteLanguage}</language>\n"
-            + $"    <lastBuildDate>{lastBuildDate}</lastBuildDate>\n"
-            + authorElement
-            + $"    <atom:link href=\"{baseUrl}/feed.xml\" rel=\"self\" type=\"application/rss+xml\" />\n"
-            + items + "\n"
-            + "  </channel>\n"
-            + "</rss>"
+// --- RSS Feed Generation ---
 
-        let feedPath = Path.Combine(Config.outputDir, "feed.xml")
-        Disk.writeFile feedPath feed
+/// RFC 1123 date for RSS; falls back to the raw string when the file name is not a date
+let private toRssDate (date: string) =
+    match DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None) with
+    | true, parsed -> parsed.ToString("R")
+    | _ -> date
 
-    // --- Sitemap Generation ---
-    let createSitemap (articles: (string * string * string * string) list) (otherPages: string list) =
-        let articleEntries =
-            articles
-            |> List.map (fun (date, _, link, _) ->
-                "  <url>\n"
-                + $"    <loc>{baseUrl}/{link}</loc>\n"
-                + $"    <lastmod>{date}</lastmod>\n"
-                + "  </url>")
-            |> String.concat "\n"
+let createRssFeed (articles: Page list) =
+    let authorElement =
+        if String.IsNullOrWhiteSpace(Config.siteAuthor) then ""
+        else $"    <managingEditor>{Xml.escape Config.siteAuthor}</managingEditor>\n"
 
-        let otherEntries =
-            otherPages
-            |> List.map (fun link ->
-                "  <url>\n"
-                + $"    <loc>{baseUrl}/{link}</loc>\n"
-                + "  </url>")
-            |> String.concat "\n"
+    let items =
+        articles
+        |> List.map (fun article ->
+            let pubDateElement =
+                match article.Date with
+                | Some date -> $"      <pubDate>{toRssDate date}</pubDate>\n"
+                | None -> ""
+            let description =
+                if String.IsNullOrWhiteSpace(article.Description) then article.Title else article.Description
+            "    <item>\n"
+            + $"      <title>{Xml.escape article.Title}</title>\n"
+            + $"      <link>{baseUrl}/{article.Link}</link>\n"
+            + $"      <guid>{baseUrl}/{article.Link}</guid>\n"
+            + pubDateElement
+            + $"      <description>{Xml.escape description}</description>\n"
+            + "    </item>")
+        |> String.concat "\n"
 
-        let sitemap =
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            + "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n"
-            + "  <url>\n"
-            + $"    <loc>{baseUrl}/</loc>\n"
-            + "  </url>\n"
-            + articleEntries + "\n"
-            + otherEntries + "\n"
-            + "</urlset>"
+    let lastBuildDate = DateTime.UtcNow.ToString("R")
 
-        let sitemapPath = Path.Combine(Config.outputDir, "sitemap.xml")
-        Disk.writeFile sitemapPath sitemap
+    let feed =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        + "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n"
+        + "  <channel>\n"
+        + $"    <title>{Xml.escape Config.siteTitle}</title>\n"
+        + $"    <link>{baseUrl}</link>\n"
+        + $"    <description>{Xml.escape Config.siteDescription}</description>\n"
+        + $"    <language>{Config.siteLanguage}</language>\n"
+        + $"    <lastBuildDate>{lastBuildDate}</lastBuildDate>\n"
+        + authorElement
+        + $"    <atom:link href=\"{baseUrl}/feed.xml\" rel=\"self\" type=\"application/rss+xml\" />\n"
+        + items + "\n"
+        + "  </channel>\n"
+        + "</rss>"
+
+    Disk.writeFile (Path.Combine(Config.outputDir, "feed.xml")) feed
+
+// --- Sitemap Generation ---
+let createSitemap (pages: Page list) =
+    let entries =
+        pages
+        |> List.map (fun page ->
+            let lastmod =
+                match page.Date with
+                | Some date -> $"    <lastmod>{date}</lastmod>\n"
+                | None -> ""
+            "  <url>\n"
+            + $"    <loc>{baseUrl}/{page.Link}</loc>\n"
+            + lastmod
+            + "  </url>")
+        |> String.concat "\n"
+
+    let sitemap =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        + "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n"
+        + "  <url>\n"
+        + $"    <loc>{baseUrl}/</loc>\n"
+        + "  </url>\n"
+        + entries + "\n"
+        + "</urlset>"
+
+    Disk.writeFile (Path.Combine(Config.outputDir, "sitemap.xml")) sitemap

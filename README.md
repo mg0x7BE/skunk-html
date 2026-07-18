@@ -32,6 +32,7 @@ To publish a post: add a Markdown file to the `markdown-blog/` folder. The file 
 - **RSS feed** - your readers can subscribe (`/feed.xml`)
 - **Sitemap** - search engines find your content (`/sitemap.xml`)
 - **SEO meta tags** - Open Graph and Twitter Cards out of the box
+- **404 page** - a "not found" page in your site's style, generated automatically
 - **Dark mode** - respects your visitors' system preference automatically
 - **Themes** - choose from built-in color themes or tweak CSS variables
 - **Comments** - optional [Giscus](https://giscus.app/) integration
@@ -40,7 +41,7 @@ To publish a post: add a Markdown file to the `markdown-blog/` folder. The file 
 
 ## Customize your site
 
-Edit `SkunkUtils.fs` - you only need to change the values in quotes:
+Edit `Config.fs` - you only need to change the values in quotes:
 
 ```fsharp
 let siteTitle = "My Blog"
@@ -48,9 +49,10 @@ let siteDescription = "A blog powered by SkunkHTML"
 let siteBaseUrl = "https://YOUR-USERNAME.github.io/skunk-html"  // No trailing slash
 let siteLanguage = "en"
 let siteAuthor = "Your Name"
+let siteImage = "assets/avatar.jpg"  // Preview image for social shares
 ```
 
-You don't need to know F# - just edit the text between the quotation marks.
+You don't need to know F# - just edit the text between the quotation marks. The same file also contains the interface texts (like the "blog entries" heading and the 404 page messages) - translate them if your blog is not in English.
 
 **Base URL examples** - set `siteBaseUrl` to match where your site is hosted:
 - GitHub project page: `https://YOUR-USERNAME.github.io/skunk-html`
@@ -99,11 +101,16 @@ skunk-html/
 │   └── images/           # Images used in articles
 ├── scripts/              # Syntax highlighting script
 ├── themes/               # Alternative color themes
-├── SkunkUtils.fs          # Configuration and utilities
+├── Config.fs              # Your site settings (title, URL, texts)
+├── SkunkUtils.fs          # Utility functions
 ├── SkunkHtml.fs           # HTML generation engine
 ├── Program.fs             # Build entry point
 └── skunk-html.fsproj      # F# project file
 ```
+
+## Updating
+
+To pick up engine improvements later, use GitHub's **Sync fork** button (or merge upstream manually). Everything that makes your blog yours lives in `Config.fs` and the content folders (`markdown-blog/`, `html/`, `css/`, `assets/`, `fonts/`) - engine updates normally don't touch those, so syncing merges cleanly.
 
 ## Optional: build locally
 

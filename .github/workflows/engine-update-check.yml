@@ -1,0 +1,83 @@
+name: Engine update check
+
+# Maintainer tripwire for dependency bumps: builds the site twice (PR base vs PR)
+# and fails when the rendered output differs, so a silent rendering change from
+# a package update becomes a visible one. A red result is not an error - it
+# means "look at the diff once and decide". Inactive in forks.
+
+on:
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - "skunk-html.fsproj"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: engine-update-check-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  compare-rendering:
+    if: github.repository_owner == 'mg0x7BE'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout base
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+
+      - name: Checkout PR
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          path: pr
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5.4.0
+        with:
+          dotnet-version: 10
+
+      - name: Build site from base
+        run: dotnet run --project base/skunk-html.fsproj
+
+      - name: Build site from PR
+        run: dotnet run --project pr/skunk-html.fsproj
+
+      - name: Compare rendered output
+        run: |
+          # The build timestamp always differs - normalize it before diffing
+          sed -i 's|<lastBuildDate>.*</lastBuildDate>|<lastBuildDate>NORMALIZED</lastBuildDate>|' \
+            base/skunk-html-output/feed.xml pr/skunk-html-output/feed.xml
+
+          if diff -ru base/skunk-html-output pr/skunk-html-output > rendering.diff; then
+            echo "✅ **Rendered output is byte-identical** - this update does not change the site. Safe to merge." >> "$GITHUB_STEP_SUMMARY"
+          else
+            CHANGED=$(grep -c -E '^(diff -ru|Only in|Binary files)' rendering.diff || true)
+            {
+              echo "## ⚠️ This update changes how the site renders"
+              echo
+              echo "This is not an error - the new dependency version produces different output."
+              echo "Review the diff below and merge if the change looks good."
+              echo
+              echo "**Differences found in ${CHANGED} file(s).**"
+              echo
+              echo '```diff'
+              head -n 300 rendering.diff
+              echo '```'
+              echo
+              echo "_The full diff and both outputs are attached to this run as the \`rendering-diff\` artifact._"
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+      - name: Upload diff and outputs
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: rendering-diff
+          path: |
+            rendering.diff
+            base/skunk-html-output
+            pr/skunk-html-output
